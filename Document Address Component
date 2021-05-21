@@ -1,0 +1,48 @@
+<aura:component implements="lightning:availableForFlowScreens,lightning:availableForFlowActions,force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="panCardNumber" type="String" />
+    <aura:attribute name="aadharCardNumber" type="String" />
+    <aura:attribute name="panCardDocument" type="String" />
+    <aura:attribute name="aadharCardDocument" type="String" />
+      <aura:attribute name="lane1" type="String" />
+      <aura:attribute name="lane2" type="String" />
+      <aura:attribute name="city" type="String" />
+      <aura:attribute name="country" type="String" />
+      <aura:attribute name="pinCode" type="Integer" />
+  
+    <div style="display:flex; flex-direction:column; margin-left: 200px;margin-right: 200px;background-image: linear-gradient(to bottom right,blue,aqua);">
+    
+     <div class="enhance">Pan Card Number</div>
+     <div style="margin: 0px 200px"> 
+        <lightning:input type="text" label="Pan Card Number" value="{!v.panCardNumber}" />
+         <div style="width: 300px; height: 200px;margin-bottom: 250px;">    
+       <div class="enhance">Upload Pan Card</div>
+      <lightning:inputRichText variant="bottom-toolbar" value="{!v.panCardDocument}" placeholder="Upload pan card image">
+          <lightning:insertImageButton/>
+      </lightning:inputRichText>
+      </div>
+        </div>
+      <div class="enhance">Aadhar Card Number</div>
+   <div style="margin: 0px 200px"> 
+     <lightning:input type="text" label="Aadhar Card Number" value="{!v.aadharCardNumber}" />
+      <div style="width: 300px; height: 200px;margin-bottom: 250px;"> 
+       <div class="enhance">Upload Aadhar Card</div>
+      <lightning:inputRichText variant="bottom-toolbar" value="{!v.aadharCardDocument}" placeholder="Upload aadhar card image">
+          <lightning:insertImageButton/>
+      </lightning:inputRichText>
+      </div>
+    </div>
+         
+          <div class="enhance">Address</div>
+	     <div style="margin: 0px 200px"> 
+            <lightning:input type="text" label="Lane 1" value="{!v.lane1}" />
+            <lightning:input type="text" label="Lane 2" value="{!v.lane2}" />
+            <lightning:input type="text" label="City" value="{!v.city}" />
+            <lightning:input type="text" label="Country" value="{!v.country}" />
+          <div style="margin-bottom: 40px">
+          <lightning:input type="number" label="Pin Code" value="{!v.pinCode}" />
+           </div>
+         </div>
+             
+   </div>
+</aura:component>
+
