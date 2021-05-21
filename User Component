@@ -1,0 +1,43 @@
+<aura:component implements="lightning:availableForFlowScreens,lightning:availableForFlowActions,force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="firstName" type="String" />
+    <aura:attribute name="lastName" type="String" />
+    <aura:attribute name="email" type="String" />
+    <aura:attribute name="phone" type="Integer" />
+    <aura:attribute name="randomCode" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <div style="background-image: linear-gradient(to bottom right, 	blue, aqua);">
+      <h1 style="text-align: center; font-size: 35px; color: chartreuse">Welcome to TenoPalt Banking Services</h1>
+       <div style="text-align: center;color: black; font-size:25px">Open any type of Bank Account instantly within Minutes!</div>
+     <div style="display: flex; flex-direction:row"> 
+       <img style="margin: 30px 30px" src="{!$Resource.bankLogo}"/>
+     <div style="margin-left: 200px;margin-right: 200px">
+         <div style="text-align: center;color: black; font-size:15px; font-weight:bold">First Name</div>
+         <lightning:input type="text" label="First Name" value="{!v.firstName}" />
+         <div style="text-align: center;color: black; font-size:15px;font-weight:bold">Last Name</div>
+           <lightning:input type="text" label="Last Name" value="{!v.lastName}" />
+             <div style="margin-top: 10px">Enter a valid EmailId, verification code will be sent to proceed further</div>
+         <div style="text-align: center;color: black; font-size:15px; font-weight:bold">Email Id</div>
+         <lightning:input type="text" label="Email Id" value="{!v.email}" />
+         <div style="text-align: center;color: black; font-size:15px; font-weight:bold">Phone Number</div>
+         <lightning:input type="number" label="Phone Number" value="{!v.phone}" />
+         <div style="margin-bottom:20px"></div>
+     </div>
+    </div>
+   </div> 
+</aura:component>
+
+js controller:
+({
+	doInit : function(component, event, helper) {
+	 //declaring all available characters 
+     const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';	
+	 var result = '';
+     const charactersLength = characters.length;
+     var length = 8;
+     for(let i=0; i < length;i++){
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+     component.set("v.randomCode",result);
+    }
+})
+
