@@ -1,0 +1,108 @@
+<aura:component implements="lightning:availableForFlowScreens,lightning:availableForFlowActions,force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="requiredCode" type="String" />
+    <aura:attribute name="givenCode" type="String" />
+    <aura:attribute name="loop" type="Boolean" default="false"/>
+    <aura:attribute name="error" type="String" default="The Entered code doesn't match" />
+    <aura:attribute name="isError" type="Boolean" default="false" />
+    <!--Attributes given from flow-->
+    <aura:attribute name="canPause" type="Boolean" />
+   <aura:attribute name="canBack" type="Boolean" />
+   <aura:attribute name="canNext" type="Boolean" />
+   <aura:attribute name="canFinish" type="Boolean" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+   <div style="margin-left: 200px;margin-right: 200px;background-image: linear-gradient(to bottom right,blue,aqua);"> 
+    <aura:if isTrue="{!v.isError}">
+        <div style="color: red; text-align: center; font-size: 30px">{!v.error}</div>
+    </aura:if>
+       <div class="enhance">Enter the Verification Code</div>
+       <div style="margin: 0px 200px"> 
+    <lightning:input type="text" label="Enter the Verification Code" value="{!v.givenCode}"/>
+      
+      <aura:if isTrue="{!v.canNext}">
+            <lightning:button class="verify" aura:id="NEXT" label="Resend Verification code" 
+               variant="brand" onclick="{!c.refresh}" />
+      </aura:if>
+       </div>
+     <div aura:id="actionButtonBar" class="slds-clearfix slds-p-top_medium">
+      <!-- If Previous is available, display to the left -->
+      <div class="slds-float_left">
+         <aura:if isTrue="{!v.canBack}">
+            <lightning:button aura:id="BACK" label="Previous"
+               variant="neutral" onclick="{!c.onButtonPressed}" />
+         </aura:if>
+      </div>
+      <div class="slds-float_right">
+         <!-- If Pause, Next, or Finish are available, display to the right -->
+         <aura:if isTrue="{!v.canPause}">
+            <lightning:button aura:id="PAUSE" label="Pause"
+               variant="neutral" onclick="{!c.onButtonPressed}" />
+         </aura:if>
+         <aura:if isTrue="{!v.canNext}">
+            <lightning:button aura:id="NEXT" label="Next" 
+               variant="brand" onclick="{!c.onButtonPressed}" />
+         </aura:if>
+         <aura:if isTrue="{!v.canFinish}">
+            <lightning:button aura:id="FINISH" label="Done"
+               variant="brand" onclick="{!c.onButtonPressed}" />
+         </aura:if>
+      </div>
+     </div>
+   </div>
+    
+</aura:component>
+
+
+js controller:
+({
+    doInit: function(cmp,event,helper){
+      var availableActions = cmp.get('v.availableActions');
+      for (var i = 0; i < availableActions.length; i++) {
+         if (availableActions[i] == "PAUSE") {
+            cmp.set("v.canPause", true);
+         } else if (availableActions[i] == "BACK") {
+            cmp.set("v.canBack", true);
+         } else if (availableActions[i] == "NEXT") {
+            cmp.set("v.canNext", true);
+         } else if (availableActions[i] == "FINISH") {
+            cmp.set("v.canFinish", true);
+         }
+      }   
+    },
+     onButtonPressed: function(cmp, event, helper) {
+      // Figure out which action was called
+      var requiredCode = cmp.get("v.requiredCode");
+      var givenCode = cmp.get("v.givenCode");
+      if(requiredCode.trim() != givenCode.trim()){
+           cmp.set("v.isError",true);
+           console.log("is not equals");
+       }
+     else{
+      console.log("is equal");
+      cmp.set("v.loop",false);
+      var actionClicked = event.getSource().getLocalId();
+      // Fire that action
+      var navigate = cmp.get('v.navigateFlow');
+      navigate(actionClicked);
+      console.log("fully executed");
+     }
+   },
+    refresh: function(component,event,helper){
+     const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';	
+	 var result = '';
+     const charactersLength = characters.length;
+     var length = 8;
+     for(let i=0; i < length;i++){
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+     component.set("v.requiredCode",result);
+     //condition to repeat the email loop
+     component.set("v.loop",true);
+     var actionClicked = event.getSource().getLocalId();
+     // Fire that action
+     var navigate = component.get('v.navigateFlow');
+     navigate(actionClicked);
+    }
+})
+
+
+helper controller:
